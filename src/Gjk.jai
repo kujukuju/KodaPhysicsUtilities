@@ -293,8 +293,8 @@ solve_simplex3 :: (simplex: *Simplex, directions: *Simplex) -> Vector3 {
                 return abc;
             } else {
                 // the origin is nearest to the triangle acb
-                directions.b, directions.c = swap(directions.b, directions.c);
-                simplex.b, simplex.c = swap(simplex.b, simplex.c);
+                directions.b, directions.c = directions.c, directions.b;
+                simplex.b, simplex.c = simplex.c, simplex.b;
                 return -abc;
             }
         }
