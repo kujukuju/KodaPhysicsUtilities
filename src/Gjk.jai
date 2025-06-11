@@ -14,8 +14,8 @@ Simplex :: struct {
 solve_gjk :: (v1: [] Vector3, v2: [] Vector3, transform1: Matrix4 = Matrix4Identity, transform2: Matrix4 = Matrix4Identity, cached_directions: *Simplex = null) -> bool, Simplex, Simplex {
     MAX_ITERATIONS :: 32;
 
-    inv_transform1 := inverse(transpose(inverse(transform1)));
-    inv_transform2 := inverse(transpose(inverse(transform2)));
+    inv_transform1 := unsafe_inverse(transpose(unsafe_inverse(transform1)));
+    inv_transform2 := unsafe_inverse(transpose(unsafe_inverse(transform2)));
 
     // not actually sure I need this
     is_valid_tetrahedron :: (simplex: Simplex) -> bool {
@@ -89,13 +89,13 @@ solve_gjk :: (v1: [] Vector3, v2: [] Vector3, transform1: Matrix4 = Matrix4Ident
     #if GJK_DEBUG {
         {
             #import "KodaJai";
-            if input.keys[Key.B] & .START {
+            if input.keys[KodaKey.B] & .START {
                 gjk_debug_max_steps -= 1;
             }
-            if input.keys[Key.M] & .START {
+            if input.keys[KodaKey.M] & .START {
                 gjk_debug_max_steps = 0;
             }
-            if input.keys[Key.N] & .START {
+            if input.keys[KodaKey.N] & .START {
                 gjk_debug_max_steps += 1;
             }
         }
@@ -229,6 +229,11 @@ get_support :: (vertices: [] Vector3, direction: Vector3, transform: Matrix4, in
 // would be easy to add one with both velocity and transform but I haven't yet
 
 #scope_file
+
+unsafe_inverse :: (m: Matrix4) -> Matrix4 {
+    _, inv := inverse(m);
+    return inv;
+}
 
 solve_simplex2 :: (simplex: *Simplex, directions: *Simplex) -> Vector3 {
     ab := simplex.b - simplex.a;

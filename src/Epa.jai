@@ -5,8 +5,8 @@ solve_epa :: (v1: [] Vector3, v2: [] Vector3, simplex: Simplex, transform1: Matr
     MAX_LOOSE_EDGES :: 32;
     TOLERANCE :: 0.0001;
 
-    inv_transform1 := inverse(transpose(inverse(transform1)));
-    inv_transform2 := inverse(transpose(inverse(transform2)));
+    inv_transform1 := unsafe_inverse(transpose(unsafe_inverse(transform1)));
+    inv_transform2 := unsafe_inverse(transpose(unsafe_inverse(transform2)));
 
     faces: [64][4] Vector3;
     faces[0][0] = simplex.a;
@@ -113,6 +113,11 @@ solve_epa :: (v1: [] Vector3, v2: [] Vector3, simplex: Simplex, transform1: Matr
 }
 
 #scope_file
+
+unsafe_inverse :: (m: Matrix4) -> Matrix4 {
+    _, inv := inverse(m);
+    return inv;
+}
 
 // get_support :: (vertices: [] Vector3($N), direction: Vector3) -> Vector3 {
 //     if vertices.count == 0 {

@@ -7,8 +7,8 @@ solve_gjk_bullet :: inline (v1: [] Vector3, v2: [] Vector3, transform1: [2] Matr
 solve_gjk_bullet :: (v1: [] Vector3, v2: [] Vector3, transform1: Matrix4 = Matrix4Identity, transform2: [2] Matrix4 = .[Matrix4Identity, Matrix4Identity], cached_directions: *Simplex = null) -> bool, Simplex, Simplex {
     MAX_ITERATIONS :: 32;
 
-    inv_transform1 := inverse(transpose(inverse(transform1)));
-    inv_transform2 := Matrix4.[inverse(transpose(inverse(transform2[0]))), inverse(transpose(inverse(transform2[1])))];
+    inv_transform1 := unsafe_inverse(transpose(unsafe_inverse(transform1)));
+    inv_transform2 := Matrix4.[unsafe_inverse(transpose(unsafe_inverse(transform2[0]))), unsafe_inverse(transpose(unsafe_inverse(transform2[1])))];
 
     // not actually sure I need this
     is_valid_tetrahedron :: (simplex: Simplex) -> bool {
@@ -259,6 +259,11 @@ get_support :: (vertices: [] Vector3, direction: Vector3, transform: [2] Matrix4
 // would be easy to add one with both velocity and transform but I haven't yet
 
 #scope_file
+
+unsafe_inverse :: (m: Matrix4) -> Matrix4 {
+    _, inv := inverse(m);
+    return inv;
+}
 
 solve_simplex2 :: (simplex: *Simplex, directions: *Simplex) -> Vector3 {
     ab := simplex.b - simplex.a;
