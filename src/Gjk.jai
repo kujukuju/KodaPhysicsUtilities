@@ -7,8 +7,7 @@ Simplex :: struct {
 
     count: int;
 
-#place a;
-    s: [4] Vector3 = ---;
+    #overlay (a) s: [4] Vector3 = ---;
 }
 
 solve_gjk :: (v1: [] Vector3, v2: [] Vector3, transform1: Matrix4 = Matrix4Identity, transform2: Matrix4 = Matrix4Identity, cached_directions: *Simplex = null) -> bool, Simplex, Simplex {
@@ -45,7 +44,7 @@ solve_gjk :: (v1: [] Vector3, v2: [] Vector3, transform1: Matrix4 = Matrix4Ident
         next_direction = -simplex.a;
     } else {
         assert(cached_directions.count == 4, "You can only provide an initial simplex of count 4.");
-        directions = << cached_directions;
+        directions = cached_directions.*;
         simplex.a = get_support(v2, directions.a, transform2, inv_transform2) - get_support(v1, -directions.a, transform1, inv_transform1);
         if dot(simplex.a, directions.a) < 0 {
             return false, .{}, .{};
